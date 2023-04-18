@@ -1,0 +1,59 @@
+{
+  "themes": [
+    {
+      "name": "animals",
+      "questions": [
+        {
+          "question": "Quelles sont les deux animaux qui coexistent dans la savane?",
+          "choices": [
+            {
+              "id": 1,
+              "text": "Lions",
+              "correctMatch": 2
+            },
+            {
+              "id": 2,
+              "text": "Zèbres",
+              "correctMatch": 1
+            },
+            {
+              "id": 3,
+              "text": "Elephants",
+              "correctMatch": null
+            },
+            {
+              "id": 4,
+              "text": "Giraffes",
+              "correctMatch": null
+            }
+          ]
+        },
+        {
+          "question": "Quelles sont les deux animaux qui coexistent dans les océans?",
+          "choices": [
+            {
+              "id": 1,
+              "text": "Dauphins",
+              "correctMatch": 2
+            },
+            {
+              "id": 2,
+              "text": "Requins",
+              "correctMatch": 1
+            },
+            {
+              "id": 3,
+              "text": "Baleines",
+              "correctMatch": null
+            },
+            {
+              "id": 4,
+              "text": "Pieuvres",
+              "correctMatch": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
