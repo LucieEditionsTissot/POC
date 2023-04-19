@@ -2,42 +2,29 @@ import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
 const socket = io("http://localhost:3000", {
-    query: { group: "studentGroup2" },
+    query: { group: "studentGroup2" }, // Spécifiez le groupe d'élèves approprié
 });
 
 export default function StudentTablet2() {
-    const [choices, setChoices] = useState([]);
+    const [questions, setQuestions] = useState([]);
 
     useEffect(() => {
-        // When the theme is selected by the teacher
-        socket.on("themeSelected", (theme) => {
-            console.log(`Theme selected: ${theme}`);
-
-            // Update the choices displayed on the tablet
-            if (theme === "animals") {
-                setChoices(["cat", "dog", "bird"]);
-            } else if (theme === "colors") {
-                setChoices(["red", "blue", "green"]);
-            }
+        socket.on("questions", questions => {
+            setQuestions(questions);
         });
+
+        return () => {
+            socket.off("questions");
+        };
     }, []);
-
-    // When the student makes a choice
-    function handleChoice(choice) {
-        console.log(`Choice made: ${choice}`);
-
-        // Send the choice to the server
-        socket.emit("choiceMade", choice);
-    }
 
     return (
         <div>
             <h1>Student Tablet</h1>
+            <h3>Questions:</h3>
             <ul>
-                {choices.map((choice) => (
-                    <li key={choice} onClick={() => handleChoice(choice)}>
-                        {choice}
-                    </li>
+                {questions.map((question, index) => (
+                    <li key={index}>{question}</li>
                 ))}
             </ul>
         </div>

@@ -1,33 +1,30 @@
-import { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+import { useState, useEffect } from "react";
+import io from "socket.io-client";
 
 const socket = io("http://localhost:3000", {
     query: { group: "studentGroup1" },
 });
 
-const StudentPage = () => {
-    const [themes, setThemes] = useState([]);
+export default function StudentTablet1() {
+    const [questions, setQuestions] = useState([]);
 
-    useEffect(() => {
-        socket.on('themesSent', (themes) => {
-            console.log('Themes received:', themes);
-            setThemes(themes);
+        socket.on("questions", questions => {
+            console.log(questions);
+            setQuestions(questions);
         });
-    }, []);
 
     return (
         <div>
-            <h1>Student View</h1>
-            <p>Select a choice:</p>
-            {themes.map((theme, index) => (
-                <div key={index}>
-                    <input type="radio" name="choice" value={theme} />
-                    <label>{theme.value}</label>
-                </div>
-            ))}
+            <h1>Student Tablet</h1>
+            <h3>Questions:</h3>
+            <ul>
+                {questions.map((question, index) => (
+                    <li key={index}>
+                        <p>Question: {question.question}</p>
+                        <p>Réponse: {question.reponse}</p>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }
-
-
-export default StudentPage;

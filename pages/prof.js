@@ -1,49 +1,42 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-import QuestionsList from "../components/QuestionsList";
 
 const socket = io("http://localhost:3000", {
     query: { group: "teacher" },
 });
 
 export default function TeacherTablet() {
+    const [selectedTheme, setSelectedTheme] = useState("");
     const [themes, setThemes] = useState([]);
 
-    function handleAnimalsThemeSelect() {
-        const selectedTheme = "animals";
-        console.log(`Theme selected: ${selectedTheme}`);
-
-        socket.emit("themeSelected", selectedTheme);
-    }
-
-    function handleColorsThemeSelect() {
-        const selectedTheme = "colors";
-        console.log(`Theme selected: ${selectedTheme}`);
-
-        socket.emit("themeSelected", selectedTheme);
-    }
-
     useEffect(() => {
-        socket.on("themesSent", (themes) => {
-            console.log(`Themes received: ${themes}`);
+        socket.on('themes', (themes) => {
             setThemes(themes);
         });
+
+        return () => {
+            socket.off('themes');
+        };
     }, []);
 
+    const handleThemeChoice = theme => {
+        socket.emit("themeChoisi", selectedTheme);
+        setSelectedTheme(theme);
+    };
     return (
         <div>
             <h1>Teacher Tablet</h1>
-            <button onClick={() => handleAnimalsThemeSelect()}>
-                Select Animals Theme
-            </button>
-            <button onClick={() => handleColorsThemeSelect()}>
-                Select Colors Theme
-            </button>
+            <h3>Choisissez un thème :</h3>
+            <input
+                type="text"
+                value={selectedTheme}
+            />
+            <h3>Thèmes sur la biodiversité :</h3>
             <ul>
-                {themes.map((theme) => (
-                    <li key={theme}>{theme}</li>
-                ))}
+                <button onClick={() => handleThemeChoice("biodiversite")}>Biodiversité</button>
+                <button onClick={() => handleThemeChoice("environnement")}>Environnement</button>
             </ul>
         </div>
     );
-}
+};
+
