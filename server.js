@@ -14,18 +14,25 @@ let interval;
 const obtenirQuestionsPourTheme = (theme) => {
   const questions = {
     biodiversite: [
-      { question: "Qu'est-ce que la biodiversité ?", reponse: "..." },
-      { question: "Pourquoi la biodiversité est-elle importante ?", reponse: "..." },
+      { question: "Pourquoi la biodiversité est-elle importante ?", reponses: [
+          {animal:"Loup", isCorrect:true },
+          {animal:"Renard", isCorrect:false },
+          {animal:"Belette", isCorrect:true },
+          {animal:"Biche", isCorrect:false },
+        ]},
     ],
     environnement: [
-      { question: "Qu'est-ce que l'environnement ?", reponse: "..." },
-      { question: "Quels sont les problèmes environnementaux actuels ?", reponse: "..." },
+      { question: "Qu'est-ce que l'environnement ?",
+        reponses: [
+          {animal:"Loup", isCorrect:true },
+          {animal:"Renard", isCorrect:false },
+          {animal:"Belette", isCorrect:true },
+          {animal:"Biche", isCorrect:false },
+        ] },
     ],
   };
-
-  return questions[theme] || [];
+  return questions[theme][0] || []
 };
-
 const getApiAndEmit = (socket) => {
   const response = new Date();
   socket.emit("FromAPI", response);
@@ -37,24 +44,35 @@ io.on("connection", (socket) => {
   }
 
   console.log('Un professeur s\'est connecté');
-
+  socket.on('registerStudent1', () => {
+    socket.join('client1');
+    console.log('Client 1 enregistré :', socket.id);
+  });
+  socket.on('registerStudent2', () => {
+    socket.join('client2');
+    console.log('Client 2 enregistré :', socket.id);
+  });
   socket.on('themeChoisi', (selectedTheme) => {
     console.log(`Thème choisi par le professeur : ${selectedTheme}`);
 
     const questions = obtenirQuestionsPourTheme(selectedTheme);
-    console.log(questions);
-    console.log(selectedTheme);
-    io.to('studentGroup1').emit('questions', questions);
-    io.to('studentGroup2').emit('questions', questions);
-  });
-socket.on('questions', questions => {
-  console.log("POC")
-});
-  socket.on("reponseQuestion", (reponse) => {
-    console.log(`La réponse "${reponse}" a été reçue.`);
+    const reponses = obtenirQuestionsPourTheme(selectedTheme).reponses;
+    const reponsesGroupe1 = reponses.slice(0, reponses.length/2);
+    const reponsesGroupe2 = reponses.slice(2);
 
-    socket.broadcast.emit("nouvelleReponse", reponse);
-    console.log("La réponse a été envoyée à tous les autres sockets.");
+    console.log(questions);
+
+    if (socket.handshake.query.group && socket.handshake.query.group === "client1") {
+      io.emit('questions', questions.question);
+      io.emit('reponses', reponsesGroupe1);
+    } else {
+      io.emit('questions', questions);
+    }
+  });
+
+  socket.on('reponseQuestion', ({ questionId, reponseId }) => {
+    console.log(`Réponse pour la question ${questionId}: Réponse ID ${reponseId}`);
+    socket.emit('reponseQuestionConfirmation', { message: 'Réponse enregistrée avec succès.' });
   });
 
   socket.on("messageSent", (message) => {
@@ -66,10 +84,7 @@ socket.on('questions', questions => {
     console.log('Teacher connected');
   }
 
-  if (socket.handshake.query.group && socket.handshake.query.group.startsWith('studentGroup')) {
-    console.log('Student connected');
 
-  }
 
   interval = setInterval(() => getApiAndEmit(socket), 1000);
 

@@ -1,22 +1,42 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import useSocket from '../hooks/useSocket.js';
-import {useState} from 'react';
-import TeacherTablet from "./prof";
-import StudentTablet1 from "./studentGroup1";
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
 
-export default function Home() {
-  const [date, setDate] = useState();
+const socket = io("http://localhost:3000", {
+    query: { group: "teacher" },
+});
 
-  const socket = useSocket('FromAPI', date => {
-    setDate(date)
-  })
+export default function TeacherTablet() {
+    const [selectedTheme, setSelectedTheme] = useState("");
+    const [themes, setThemes] = useState([]);
 
-  return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-          <TeacherTablet/>
-      </main>
-    </div>
-  )
-}
+    useEffect(() => {
+        socket.on('themes', (themes) => {
+            setThemes(themes);
+        });
+
+        return () => {
+            socket.off('themes');
+        };
+    }, []);
+
+    const handleThemeChoice = theme => {
+        socket.emit("themeChoisi", selectedTheme);
+        setSelectedTheme(theme);
+    };
+    return (
+        <div>
+            <h1>Teacher Tablet</h1>
+            <h3>Choisissez un thème :</h3>
+            <input
+                type="text"
+                value={selectedTheme}
+            />
+            <h3>Thèmes sur la biodiversité :</h3>
+            <ul>
+                <button onClick={() => handleThemeChoice("biodiversite")}>Biodiversité</button>
+                <button onClick={() => handleThemeChoice("environnement")}>Environnement</button>
+            </ul>
+        </div>
+    );
+};
+

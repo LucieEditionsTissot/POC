@@ -7,7 +7,7 @@ const socket = io("http://localhost:3000", {
 
 export default function StudentTablet2() {
     const [questions, setQuestions] = useState([]);
-
+    socket.emit('registerStudent2');
     useEffect(() => {
         socket.on("questions", questions => {
             setQuestions(questions);
