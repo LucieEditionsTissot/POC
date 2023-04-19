@@ -43,6 +43,7 @@ io.on("connection", (socket) => {
 
     const questions = obtenirQuestionsPourTheme(selectedTheme);
     console.log(questions);
+    console.log(selectedTheme);
     io.to('studentGroup1').emit('questions', questions);
     io.to('studentGroup2').emit('questions', questions);
   });

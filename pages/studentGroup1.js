@@ -8,10 +8,16 @@ const socket = io("http://localhost:3000", {
 export default function StudentTablet1() {
     const [questions, setQuestions] = useState([]);
 
+    useEffect(() => {
         socket.on("questions", questions => {
-            console.log(questions);
             setQuestions(questions);
         });
+
+        return () => {
+            socket.off("questions");
+        };
+    }, []);
+
 
     return (
         <div>
