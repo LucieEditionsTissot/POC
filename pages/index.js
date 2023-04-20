@@ -8,18 +8,25 @@ const socket = io("http://localhost:3000", {
 export default function TeacherTablet() {
     const [selectedTheme, setSelectedTheme] = useState("");
     const [themes, setThemes] = useState([]);
+    const [reponsesCorrectes, setReponsesCorrectes] = useState([]);
 
     useEffect(() => {
         socket.on('themes', (themes) => {
             setThemes(themes);
         });
-
+        socket.on("reloadClient", () => {
+            window.location.reload();
+        });
+        socket.on('reponsesCorrectes', (reponsesCorrectes) => {
+            setReponsesCorrectes(reponsesCorrectes);
+            console.log('Bonnes réponses :', reponsesCorrectes);
+        });
         return () => {
             socket.off('themes');
         };
     }, []);
 
-    const handleThemeChoice = theme => {
+    const handleThemeChoice = (theme) => {
         socket.emit("themeChoisi", selectedTheme);
         setSelectedTheme(theme);
     };
@@ -36,7 +43,11 @@ export default function TeacherTablet() {
                 <button onClick={() => handleThemeChoice("biodiversite")}>Biodiversité</button>
                 <button onClick={() => handleThemeChoice("environnement")}>Environnement</button>
             </ul>
+            <ul>
+                {reponsesCorrectes.map((reponse, index) => (
+                    <li key={index}>{reponse.animal}</li>
+                ))}
+            </ul>
         </div>
     );
 };
-

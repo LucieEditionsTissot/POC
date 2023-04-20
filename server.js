@@ -10,7 +10,9 @@ const nextApp = next({ dev });
 const nextHandler = nextApp.getRequestHandler();
 
 let interval;
-
+let clientsChoixFaits = 0;
+let reponsesCorrectes;
+let themeChoisi;
 const obtenirQuestionsPourTheme = (theme) => {
   const questions = {
     biodiversite: [
@@ -33,6 +35,13 @@ const obtenirQuestionsPourTheme = (theme) => {
   };
   return questions[theme][0] || []
 };
+const obtenirReponsesCorrectesPourTheme = (theme, bonnesReponses) => {
+  const questions = obtenirQuestionsPourTheme(theme);
+  const reponses = questions.reponses;
+  return reponses.filter(reponse => {
+  return bonnesReponses.includes(reponse.animal) && reponse.isCorrect === true;
+  });
+};
 const getApiAndEmit = (socket) => {
   const response = new Date();
   socket.emit("FromAPI", response);
@@ -52,6 +61,11 @@ io.on("connection", (socket) => {
     socket.join('client2');
     console.log('Client 2 enregistré :', socket.id);
   });
+  socket.on('registerAnimationClient', () => {
+    socket.join('client3');
+    console.log('Client 3 enregistré :', socket.id);
+  });
+
   socket.on('themeChoisi', (selectedTheme) => {
     console.log(`Thème choisi par le professeur : ${selectedTheme}`);
 
@@ -59,35 +73,52 @@ io.on("connection", (socket) => {
     const reponses = obtenirQuestionsPourTheme(selectedTheme).reponses;
     const reponsesGroupe1 = reponses.slice(0, reponses.length/2);
     const reponsesGroupe2 = reponses.slice(2);
+    const bonnesReponses = reponses.filter(reponse => reponse.isCorrect).map(reponse => reponse.animal);
+    reponsesCorrectes = obtenirReponsesCorrectesPourTheme(selectedTheme, bonnesReponses);
+    themeChoisi = selectedTheme;
+    io.emit('reponsesCorrectes', reponsesCorrectes);
+    io.emit('questions', questions);
+    io.to("client1").emit('reponses', reponsesGroupe1);
+    io.to("client2").emit('reponses', reponsesGroupe2);
 
-    console.log(questions);
+  });
 
-    if (socket.handshake.query.group && socket.handshake.query.group === "client1") {
-      io.emit('questions', questions.question);
-      io.emit('reponses', reponsesGroupe1);
+  socket.on("reponseQuestion", ({ reponseId, isCorrect}) => {
+
+    if (isCorrect) {
+      console.log(`La réponse avec l'ID ${reponseId} est correcte`);
     } else {
-      io.emit('questions', questions);
+      console.log(`La réponse avec l'ID ${reponseId} est incorrecte`);
+    }
+
+    const clients = io.sockets.adapter.rooms;
+    if (clients.get("client1") && clients.get("client2")) {
+      const clientId = socket.id;
+      socket.broadcast.emit("choixFaits", {clientId});
+
+    }
+
+  });
+
+  socket.on("choixFaits", ({clientId}) => {
+    clientId = socket.id;
+    console.log(`Le client ${clientId} a déjà fait un choix`);
+    clientsChoixFaits++;
+    if (clientsChoixFaits === 2) {
+      console.log("Les choix ont été faits sur toutes les tablettes");
+      socket.broadcast.emit("themeChoisi", themeChoisi);
+      clientsChoixFaits = 0;
+      io.emit("choixFaits", {});
+      console.log("in");
+      setTimeout(() => {
+      console.log("out");
+        io.emit("reloadClient");
+      }, 2000);
+
     }
   });
 
-  socket.on('reponseQuestion', ({ questionId, reponseId }) => {
-    console.log(`Réponse pour la question ${questionId}: Réponse ID ${reponseId}`);
-    socket.emit('reponseQuestionConfirmation', { message: 'Réponse enregistrée avec succès.' });
-  });
-
-  socket.on("messageSent", (message) => {
-    console.log(message);
-    io.emit("messageSent", message);
-  });
-
-  if (socket.handshake.query.group === 'teacher') {
-    console.log('Teacher connected');
-  }
-
-
-
   interval = setInterval(() => getApiAndEmit(socket), 1000);
-
   socket.on("disconnect", () => {
     console.log("Client disconnected");
     clearInterval(interval);
