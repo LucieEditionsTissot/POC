@@ -71,22 +71,25 @@ export default function StudentTablet2() {
             <h1>Tablette groupe 2</h1>
             <h3>Questions:</h3>
             <p>{questions.question}</p>
-            <ul>
-                {reponses.map((reponse, index) => (
-                    <li key={index}
-                        onClick={() => !reponseSoumise && handleReponse(reponse.id)}
-                        style={{ cursor: reponseSoumise ? "not-allowed" : "pointer" }}
-                    >
-                        {reponse.animal}
-                    </li>
-                ))}
-            </ul>
+            <div  style={{display: "flex", justifyContent: "center"}}>
+                <ul>
+                    {reponses.map((reponse, index) => (
+                        <h3 key={index}
+                            onClick={() => !reponseSoumise && handleReponse(reponse.id)}
+                            style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: reponseSoumise ? "not-allowed" : "pointer" }}
+                        >
+                            {reponse.animal}
+                        </h3>
+                    ))}
+                </ul>
+            </div>
             {reponseChoisie && (
                 <p>
                     Votre choix: {reponseChoisie}{" "}
                     {reponseCorrecte ? "(Correct)" : "(Incorrect)"}
                 </p>
             )}
+
             {attenteReponse && (
                 <p>En attente du deuxième groupe</p>
             )}

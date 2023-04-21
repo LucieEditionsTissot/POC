@@ -27,25 +27,25 @@ export default function TeacherTablet() {
     }, []);
 
     const handleThemeChoice = (theme) => {
-        socket.emit("themeChoisi", selectedTheme);
+        socket.emit("themeChoisi", theme); // Utiliser "theme" au lieu de "selectedTheme"
         setSelectedTheme(theme);
     };
+
+
     return (
         <div>
             <h1>Tablette professeur</h1>
-            <input
-                type="text"
-                value={selectedTheme}
-            />
             <h3>Thèmes sur le mutualisme :</h3>
+            <div style={{display: "flex", justifyContent: "center"}}>
             <ul>
-                <button onClick={() => handleThemeChoice("ocean")}>Océan</button>
-                <button onClick={() => handleThemeChoice("foret")}>Forêt</button>
-                <button onClick={() => handleThemeChoice("montagne")}>Montagne</button>
-                <button onClick={() => handleThemeChoice("prairie")}>Prairie</button>
-                <button onClick={() => handleThemeChoice("jardin")}>Jardin</button>
+                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("ocean")}>Océan</h2>
+                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("foret")}>Forêt</h2>
+                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("montagne")}>Montagne</h2>
+                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("prairie")}>Prairie</h2>
+                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("jardin")}>Jardin</h2>
 
             </ul>
+            </div>
             <ul>
                 {reponsesCorrectes.map((reponse, index) => (
                     <li key={index}>{reponse.animal}</li>

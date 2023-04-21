@@ -70,16 +70,18 @@ export default function StudentTablet1() {
             <h1>Tablette groupe 1</h1>
             <h3>Questions:</h3>
             <p>{questions.question}</p>
+            <div  style={{display: "flex", justifyContent: "center"}}>
             <ul>
                 {reponses.map((reponse, index) => (
-                    <li key={index}
+                    <h3 key={index}
                         onClick={() => !reponseSoumise && handleReponse(reponse.id)}
-                        style={{ cursor: reponseSoumise ? "not-allowed" : "pointer" }}
+                        style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: reponseSoumise ? "not-allowed" : "pointer" }}
                     >
                         {reponse.animal}
-                    </li>
+                    </h3>
                 ))}
             </ul>
+            </div>
             {reponseChoisie && (
                 <p>
                     Votre choix: {reponseChoisie}{" "}
