@@ -27,10 +27,9 @@ export default function TeacherTablet() {
     }, []);
 
     const handleThemeChoice = (theme) => {
-        socket.emit("themeChoisi", theme); // Utiliser "theme" au lieu de "selectedTheme"
+        socket.emit("themeChoisi", theme);
         setSelectedTheme(theme);
     };
-
 
     return (
         <div>
