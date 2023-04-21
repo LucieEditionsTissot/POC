@@ -32,16 +32,19 @@ export default function TeacherTablet() {
     };
     return (
         <div>
-            <h1>Teacher Tablet</h1>
-            <h3>Choisissez un thème :</h3>
+            <h1>Tablette professeur</h1>
             <input
                 type="text"
                 value={selectedTheme}
             />
-            <h3>Thèmes sur la biodiversité :</h3>
+            <h3>Thèmes sur le mutualisme :</h3>
             <ul>
-                <button onClick={() => handleThemeChoice("biodiversite")}>Biodiversité</button>
-                <button onClick={() => handleThemeChoice("environnement")}>Environnement</button>
+                <button onClick={() => handleThemeChoice("ocean")}>Océan</button>
+                <button onClick={() => handleThemeChoice("foret")}>Forêt</button>
+                <button onClick={() => handleThemeChoice("montagne")}>Montagne</button>
+                <button onClick={() => handleThemeChoice("prairie")}>Prairie</button>
+                <button onClick={() => handleThemeChoice("jardin")}>Jardin</button>
+
             </ul>
             <ul>
                 {reponsesCorrectes.map((reponse, index) => (

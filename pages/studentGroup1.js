@@ -12,6 +12,7 @@ export default function StudentTablet1() {
     const [attenteReponse, setAttenteReponse] = useState(false);
     const [choixFaits, setChoixFaits] = useState(false);
     const [clientId, setClientId] = useState(null);
+    const [selectedTheme, setSelectedTheme] = useState("");
 
     useEffect(() => {
         socket.emit("registerStudent1");
@@ -26,9 +27,11 @@ export default function StudentTablet1() {
             }));
             setReponses(reponsesAvecId);
         });
+        socket.on('themeChosen', (selectedTheme) => {
+            setSelectedTheme(selectedTheme);
+        });
 
         socket.on("choixFaits", ({ clientId}) => {
-            console.log(`Le client ${clientId} a déjà fait un choix`);
             setClientId(clientId);
         });
         socket.on("reloadClient", () => {
@@ -64,7 +67,7 @@ export default function StudentTablet1() {
 
     return (
         <div>
-            <h1>Student Tablet</h1>
+            <h1>Tablette groupe 1</h1>
             <h3>Questions:</h3>
             <p>{questions.question}</p>
             <ul>
