@@ -79,46 +79,47 @@ export default function StudentTablet2() {
             <Head>
                 <title>Tablette groupe 2</title>
             </Head>
-            <div>
-                <h1>Tablette groupe 2</h1>
+            <div className={"global-wrapper"}>
+                <h5 className={"type"}>Tablette groupe 2</h5>
                 {questions.question && (
                     <>
-                        <h3>Question : {questions.question}</h3>
-                        <p>Cliquer sur les animaux pour les supprimer, le but est d'obtenir un seul animal que vous
-                            pensez être le bon</p>
+                        <h3 className={"question"}>Question : {questions.question}</h3>
+                        <p className={"info"}>Cliquer sur les animaux pour les supprimer, le but est d'obtenir un seul animal que vous
+                            pensez
+                            être le bon</p>
 
                     </>
                 )}
-                <div style={{display: "flex", justifyContent: "center"}}>
-                    <ul>
-                        {reponses.map((reponse, index) => (
-                            <h3 className={"answer"} key={index} id={reponse.id}
-                                onClick={(e) => !reponseSoumise && handleReponse(reponse.id, e)}
-                                style={{
-                                    padding: "1rem",
-                                    margin: "1rem",
-                                    border: "1px solid black",
-                                    cursor: reponseSoumise ? "not-allowed" : "pointer"
-                                }}
-                            >
-                                {reponse.animal}
-                            </h3>
-                        ))}
-                    </ul>
+                <div className={"questionWrapper"}>
+                    {reponses.map((reponse, index) => (
+                        <h2 className={"answer"} key={index} id={reponse.id}
+                            onClick={(e) => !reponseSoumise && handleReponse(reponse.id, e)}
+                            style={{
+                                padding: "1rem",
+                                margin: "1rem",
+                                border: "1px solid black",
+                                cursor: reponseSoumise ? "not-allowed" : "pointer"
+                            }}
+                        >
+                            {reponse.animal}
+                        </h2>
+                    ))}
                 </div>
-                {reponseChoisie && (
-                    <p>
-                        Votre choix: {reponseChoisie}{" "}
-                        {reponseCorrecte ? "(Correct)" : "(Incorrect)"}
-                    </p>
-                )}
+                <div className={"answerWrapper"}>
 
-                {attenteReponse && (
-                    <p>En attente du premier groupe</p>
-                )}
-                {choixFaits && (
-                    <p>Les choix ont été faits sur les deux tablettes.</p>
-                )}
+                    {reponseChoisie && (
+                        <p>{reponseCorrecte ? "Correct" : "Incorrect"}</p>
+                    )}
+
+                    {attenteReponse && (
+                        <h5>, en attente du premier groupe</h5>
+                    )}
+
+                    {choixFaits && (
+                        <h5>, les choix ont été faits sur les deux tablettes.</h5>
+                    )}
+
+                </div>
             </div>
         </>
     );

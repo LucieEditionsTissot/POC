@@ -50,7 +50,7 @@ header {
 
 }
 
-.teacherWrapper {
+.global-wrapper {
   position: relative;
   width: 100%;
   padding: 50px 5%;
@@ -68,7 +68,7 @@ header {
     background: $lightGray;
   }
 
-  .theme {
+  .theme, .question {
     position: relative;
     margin-top: 75px;
     font-size: 2vw;
@@ -76,7 +76,14 @@ header {
     text-align: center;
   }
 
-  .themeWrapper {
+  .info {
+    position: relative;
+    margin-top: 10px;
+    font-size: 1.1vw;
+    text-align: center;
+  }
+
+  .themeWrapper, .questionWrapper {
     position: relative;
     margin-top: 50px;
     width: 100%;
@@ -95,10 +102,16 @@ header {
       cursor: pointer;
       border: 1px solid $gray;
       background: $lightGray;
-      transition: background-color ease-in-out 0.35s;
+      transition: all ease-in-out 0.35s;
 
       &:hover, &.selected {
         background: #cecece;
+      }
+
+      &.disabled {
+        background: #ffffff;
+        color: #d5d5d5;
+        border: 1px solid #d5d5d5;
       }
 
     }

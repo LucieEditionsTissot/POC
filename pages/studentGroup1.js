@@ -77,21 +77,20 @@ export default function StudentTablet1() {
             <Head>
                 <title>Tablette groupe 1</title>
             </Head>
-            <div>
-                <h1>Tablette groupe 1</h1>
+            <div className={"global-wrapper"}>
+                <h5 className={"type"}>Tablette groupe 1</h5>
                 {questions.question && (
                     <>
-                        <h3>Question : {questions.question}</h3>
-                        <p>Cliquer sur les animaux pour les supprimer, le but est d'obtenir un seul animal que vous
+                        <h3 className={"question"}>Question : {questions.question}</h3>
+                        <p className={"info"}>Cliquer sur les animaux pour les supprimer, le but est d'obtenir un seul animal que vous
                             pensez
                             être le bon</p>
 
                     </>
                 )}
-                <div style={{display: "flex", justifyContent: "center"}}>
-                    <ul>
+                <div className={"questionWrapper"}>
                         {reponses.map((reponse, index) => (
-                            <h3 className={"answer"} key={index} id={reponse.id}
+                            <h2 className={"answer"} key={index} id={reponse.id}
                                 onClick={(e) => !reponseSoumise && handleReponse(reponse.id, e)}
                                 style={{
                                     padding: "1rem",
@@ -101,22 +100,24 @@ export default function StudentTablet1() {
                                 }}
                             >
                                 {reponse.animal}
-                            </h3>
+                            </h2>
                         ))}
-                    </ul>
                 </div>
-                {reponseChoisie && (
-                    <p>
-                        Votre choix: {reponseChoisie}{" "}
-                        {reponseCorrecte ? "(Correct)" : "(Incorrect)"}
-                    </p>
-                )}
-                {attenteReponse && (
-                    <p>En attente du deuxième groupe</p>
-                )}
-                {choixFaits && (
-                    <p>Les choix ont été faits sur les deux tablettes.</p>
-                )}
+                <div className={"answerWrapper"}>
+
+                    {reponseChoisie && (
+                        <p>{reponseCorrecte ? "Correct" : "Incorrect"}</p>
+                    )}
+
+                    {attenteReponse && (
+                        <h5>, en attente du deuxième groupe</h5>
+                    )}
+
+                    {choixFaits && (
+                        <h5>, les choix ont été faits sur les deux tablettes.</h5>
+                    )}
+
+                </div>
             </div>
         </>
     );

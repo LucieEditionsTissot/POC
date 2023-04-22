@@ -38,7 +38,7 @@ export default function TeacherTablet() {
         <Head>
             <title>Tablette professeur</title>
         </Head>
-        <div className={"teacherWrapper"}>
+        <div className={"global-wrapper"}>
             <h5 className={"type"}>Tablette professeur</h5>
             <h3 className={"theme"}>Thèmes sur le mutualisme :</h3>
             <div className={"themeWrapper"}>
