@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 
 const socket = io("http://localhost:3000");
@@ -31,7 +31,7 @@ export default function StudentTablet1() {
             setSelectedTheme(selectedTheme);
         });
 
-        socket.on("choixFaits", ({ clientId}) => {
+        socket.on("choixFaits", ({clientId}) => {
             setClientId(clientId);
         });
         socket.on("reloadClient", () => {
@@ -46,41 +46,58 @@ export default function StudentTablet1() {
 
     useEffect(() => {
         if (clientId && reponseChoisie) {
-            socket.emit("choixFaits", { clientId });
+            socket.emit("choixFaits", {clientId});
             socket.emit("reloadClient");
             setAttenteReponse(false)
             setChoixFaits(true);
         }
     }, [clientId, reponseChoisie]);
 
-    const handleReponse = (reponseId) => {
-        const reponseSelectionnee = reponses.find(reponse => reponse.id === reponseId);
-        if (reponseSelectionnee) {
-            const isReponseCorrecte = reponseSelectionnee.isCorrect;
-            socket.emit("reponseQuestion", { reponseId, isCorrect: isReponseCorrecte });
-            setReponseSoumise(true);
-            setReponseChoisie(reponseSelectionnee.animal);
-            setReponseCorrecte(isReponseCorrecte);
-            setAttenteReponse(true);
+    const handleReponse = (reponseId, e) => {
+        if (document.querySelectorAll('.answer:not(.disabled)').length > 2) {
+            e.target.classList.add('disabled')
+        } else {
+            e.target.classList.add('disabled')
+            const lastAnswerNotSelectedId = document.querySelector('.answer:not(.disabled)').id;
+            const reponseSelectionnee = reponses.find(reponse => reponse.id === lastAnswerNotSelectedId);
+            if (reponseSelectionnee) {
+                const isReponseCorrecte = reponseSelectionnee.isCorrect;
+                socket.emit("reponseQuestion", {reponseId, isCorrect: isReponseCorrecte});
+                setReponseSoumise(true);
+                setReponseChoisie(reponseSelectionnee.animal);
+                setReponseCorrecte(isReponseCorrecte);
+                setAttenteReponse(true);
+            }
         }
     };
 
     return (
         <div>
             <h1>Tablette groupe 1</h1>
-            <h3>Questions:</h3>
-            <p>{questions.question}</p>
-            <div  style={{display: "flex", justifyContent: "center"}}>
-            <ul>
-                {reponses.map((reponse, index) => (
-                    <h3 key={index}
-                        onClick={() => !reponseSoumise && handleReponse(reponse.id)}
-                        style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: reponseSoumise ? "not-allowed" : "pointer" }}
-                    >
-                        {reponse.animal}
-                    </h3>
-                ))}
-            </ul>
+            {questions.question && (
+                <>
+                    <h3>Question : {questions.question}</h3>
+                    <p>Cliquer sur les animaux pour les supprimer, le but est d'obtenir un seul animal que vous pensez
+                        être le bon</p>
+
+                </>
+            )}
+            <div style={{display: "flex", justifyContent: "center"}}>
+                <ul>
+                    {reponses.map((reponse, index) => (
+                        <h3  className={"answer"} key={index} id={reponse.id}
+                            onClick={(e) => !reponseSoumise && handleReponse(reponse.id, e)}
+                            style={{
+                                padding: "1rem",
+                                margin: "1rem",
+                                border: "1px solid black",
+                                cursor: reponseSoumise ? "not-allowed" : "pointer"
+                            }}
+                        >
+                            {reponse.animal}
+                        </h3>
+                    ))}
+                </ul>
             </div>
             {reponseChoisie && (
                 <p>

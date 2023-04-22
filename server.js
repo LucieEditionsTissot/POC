@@ -84,6 +84,7 @@ const obtenirQuestionsPourTheme = (theme) => {
   };
   return questions[theme][0] || []
 };
+
 const obtenirReponsesCorrectesPourTheme = (theme, bonnesReponses) => {
   const questions = obtenirQuestionsPourTheme(theme);
   const reponses = questions.reponses;
@@ -114,11 +115,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on('themeChoisi', (selectedTheme) => {
-
     const questions = obtenirQuestionsPourTheme(selectedTheme);
     const reponses = obtenirQuestionsPourTheme(selectedTheme).reponses;
     const reponsesGroupe1 = reponses.slice(0, reponses.length/2);
     const reponsesGroupe2 = reponses.slice(reponses.length/2);
+    console.log(reponsesGroupe1)
+    console.log(reponsesGroupe2)
     const bonnesReponses = reponses.filter(reponse => reponse.isCorrect).map(reponse => reponse.animal);
     reponsesCorrectes = obtenirReponsesCorrectesPourTheme(selectedTheme, bonnesReponses);
     themeChoisi = selectedTheme;

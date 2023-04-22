@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 
 const socket = io("http://localhost:3000");
@@ -29,7 +29,7 @@ export default function StudentTablet2() {
             setReponses(reponsesAvecId);
         });
 
-        socket.on("choixFaits", ({ clientId }) => {
+        socket.on("choixFaits", ({clientId}) => {
             setClientId(clientId);
             socket.emit('showThemeAndAnswers', selectedTheme);
         });
@@ -37,7 +37,7 @@ export default function StudentTablet2() {
             setSelectedTheme(selectedTheme);
         });
         socket.on("reloadClient", () => {
-                window.location.reload();
+            window.location.reload();
         });
 
         return () => {
@@ -46,37 +46,54 @@ export default function StudentTablet2() {
         };
     }, []);
 
-    const handleReponse = (reponseId) => {
-        const reponseSelectionnee = reponses.find(reponse => reponse.id === reponseId);
-        if (reponseSelectionnee) {
-            const isReponseCorrecte = reponseSelectionnee.isCorrect;
-            socket.emit("reponseQuestion", { reponseId, isCorrect: isReponseCorrecte });
-            setReponseSoumise(true);
-            setReponseChoisie(reponseSelectionnee.animal);
-            setReponseCorrecte(isReponseCorrecte);
-            setAttenteReponse(true);
-        }
-    };
     useEffect(() => {
         if (clientId && reponseChoisie) {
-            socket.emit("choixFaits", { clientId });
+            socket.emit("choixFaits", {clientId});
             socket.emit("animation");
             setAttenteReponse(false);
             setChoixFaits(true);
         }
     }, [clientId, reponseChoisie]);
 
+    const handleReponse = (reponseId, e) => {
+        if (document.querySelectorAll('.answer:not(.disabled)').length > 2) {
+            e.target.classList.add('disabled')
+        } else {
+            e.target.classList.add('disabled')
+            const lastAnswerNotSelectedId = document.querySelector('.answer:not(.disabled)').id;
+            const reponseSelectionnee = reponses.find(reponse => reponse.id === lastAnswerNotSelectedId);
+            if (reponseSelectionnee) {
+                const isReponseCorrecte = reponseSelectionnee.isCorrect;
+                socket.emit("reponseQuestion", {reponseId, isCorrect: isReponseCorrecte});
+                setReponseSoumise(true);
+                setReponseChoisie(reponseSelectionnee.animal);
+                setReponseCorrecte(isReponseCorrecte);
+                setAttenteReponse(true);
+            }
+        }
+    };
+
     return (
         <div>
             <h1>Tablette groupe 2</h1>
-            <h3>Questions:</h3>
-            <p>{questions.question}</p>
-            <div  style={{display: "flex", justifyContent: "center"}}>
+            {questions.question && (
+                <>
+                    <h3>Question : {questions.question}</h3>
+                    <p>Cliquer sur les animaux pour les supprimer, le but est d'obtenir un seul animal que vous pensez être le bon</p>
+
+                </>
+            )}
+            <div style={{display: "flex", justifyContent: "center"}}>
                 <ul>
                     {reponses.map((reponse, index) => (
-                        <h3 key={index}
-                            onClick={() => !reponseSoumise && handleReponse(reponse.id)}
-                            style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: reponseSoumise ? "not-allowed" : "pointer" }}
+                        <h3  className={"answer"} key={index} id={reponse.id}
+                             onClick={(e) => !reponseSoumise && handleReponse(reponse.id, e)}
+                             style={{
+                                 padding: "1rem",
+                                 margin: "1rem",
+                                 border: "1px solid black",
+                                 cursor: reponseSoumise ? "not-allowed" : "pointer"
+                             }}
                         >
                             {reponse.animal}
                         </h3>
@@ -91,7 +108,7 @@ export default function StudentTablet2() {
             )}
 
             {attenteReponse && (
-                <p>En attente du deuxième groupe</p>
+                <p>En attente du premier groupe</p>
             )}
             {choixFaits && (
                 <p>Les choix ont été faits sur les deux tablettes.</p>

@@ -29,6 +29,7 @@ export default function TeacherTablet() {
     const handleThemeChoice = (theme) => {
         socket.emit("themeChoisi", theme);
         setSelectedTheme(theme);
+        console.log("Thème choisi : ", theme);
     };
 
     return (
@@ -42,7 +43,6 @@ export default function TeacherTablet() {
                 <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("montagne")}>Montagne</h2>
                 <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("prairie")}>Prairie</h2>
                 <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("jardin")}>Jardin</h2>
-
             </ul>
             </div>
             <ul>
