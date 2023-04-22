@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
+import Head from "next/head";
 
 const socket = io("http://localhost:3000");
 
@@ -72,46 +73,52 @@ export default function StudentTablet1() {
     };
 
     return (
-        <div>
-            <h1>Tablette groupe 1</h1>
-            {questions.question && (
-                <>
-                    <h3>Question : {questions.question}</h3>
-                    <p>Cliquer sur les animaux pour les supprimer, le but est d'obtenir un seul animal que vous pensez
-                        être le bon</p>
+        <>
+            <Head>
+                <title>Tablette groupe 1</title>
+            </Head>
+            <div>
+                <h1>Tablette groupe 1</h1>
+                {questions.question && (
+                    <>
+                        <h3>Question : {questions.question}</h3>
+                        <p>Cliquer sur les animaux pour les supprimer, le but est d'obtenir un seul animal que vous
+                            pensez
+                            être le bon</p>
 
-                </>
-            )}
-            <div style={{display: "flex", justifyContent: "center"}}>
-                <ul>
-                    {reponses.map((reponse, index) => (
-                        <h3  className={"answer"} key={index} id={reponse.id}
-                            onClick={(e) => !reponseSoumise && handleReponse(reponse.id, e)}
-                            style={{
-                                padding: "1rem",
-                                margin: "1rem",
-                                border: "1px solid black",
-                                cursor: reponseSoumise ? "not-allowed" : "pointer"
-                            }}
-                        >
-                            {reponse.animal}
-                        </h3>
-                    ))}
-                </ul>
+                    </>
+                )}
+                <div style={{display: "flex", justifyContent: "center"}}>
+                    <ul>
+                        {reponses.map((reponse, index) => (
+                            <h3 className={"answer"} key={index} id={reponse.id}
+                                onClick={(e) => !reponseSoumise && handleReponse(reponse.id, e)}
+                                style={{
+                                    padding: "1rem",
+                                    margin: "1rem",
+                                    border: "1px solid black",
+                                    cursor: reponseSoumise ? "not-allowed" : "pointer"
+                                }}
+                            >
+                                {reponse.animal}
+                            </h3>
+                        ))}
+                    </ul>
+                </div>
+                {reponseChoisie && (
+                    <p>
+                        Votre choix: {reponseChoisie}{" "}
+                        {reponseCorrecte ? "(Correct)" : "(Incorrect)"}
+                    </p>
+                )}
+                {attenteReponse && (
+                    <p>En attente du deuxième groupe</p>
+                )}
+                {choixFaits && (
+                    <p>Les choix ont été faits sur les deux tablettes.</p>
+                )}
             </div>
-            {reponseChoisie && (
-                <p>
-                    Votre choix: {reponseChoisie}{" "}
-                    {reponseCorrecte ? "(Correct)" : "(Incorrect)"}
-                </p>
-            )}
-            {attenteReponse && (
-                <p>En attente du deuxième groupe</p>
-            )}
-            {choixFaits && (
-                <p>Les choix ont été faits sur les deux tablettes.</p>
-            )}
-        </div>
+        </>
     );
 }
 
