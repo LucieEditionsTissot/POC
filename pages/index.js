@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
+import Head from "next/head";
 
 const socket = io("http://localhost:3000", {
-    query: { group: "teacher" },
+    query: {group: "teacher"},
 });
 
 export default function TeacherTablet() {
@@ -26,30 +27,37 @@ export default function TeacherTablet() {
         };
     }, []);
 
-    const handleThemeChoice = (theme) => {
+    const handleThemeChoice = (theme, e) => {
+        e.target.classList.add("selected");
         socket.emit("themeChoisi", theme);
         setSelectedTheme(theme);
+        console.log("Thème choisi : ", theme);
     };
 
-    return (
-        <div>
-            <h1>Tablette professeur</h1>
-            <h3>Thèmes sur le mutualisme :</h3>
-            <div style={{display: "flex", justifyContent: "center"}}>
-            <ul>
-                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("ocean")}>Océan</h2>
-                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("foret")}>Forêt</h2>
-                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("montagne")}>Montagne</h2>
-                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("prairie")}>Prairie</h2>
-                <h2 style={{padding: "1rem", margin: "1rem", border: "1px solid black", cursor: "pointer"}} onClick={() => handleThemeChoice("jardin")}>Jardin</h2>
-
-            </ul>
+    return <>
+        <Head>
+            <title>Tablette professeur</title>
+        </Head>
+        <div className={"global-wrapper"}>
+            <h5 className={"type"}>Tablette professeur</h5>
+            <h3 className={"theme"}>Thèmes sur le mutualisme :</h3>
+            <div className={"themeWrapper"}>
+                <h2 onClick={(e) => handleThemeChoice("ocean", e)}>Océan</h2>
+                <h2 onClick={(e) => handleThemeChoice("foret", e)}>Forêt</h2>
+                <h2 onClick={(e) => handleThemeChoice("montagne", e)}>Montagne</h2>
+                <h2 onClick={(e) => handleThemeChoice("prairie", e)}>Prairie</h2>
+                <h2 onClick={(e) => handleThemeChoice("jardin", e)}>Jardin</h2>
             </div>
-            <ul>
-                {reponsesCorrectes.map((reponse, index) => (
-                    <li key={index}>{reponse.animal}</li>
-                ))}
-            </ul>
+            {selectedTheme && (
+                <>
+                    <div className={"answerWrapper"}>
+                        <h5>Les réponses sont : </h5>
+                        {reponsesCorrectes.map((reponse, index) => (
+                            <p key={index}>{reponse.animal}</p>
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
-    );
+    </>
 };

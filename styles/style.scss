@@ -1,0 +1,145 @@
+$gray: #303030;
+$lightGray : #e7e7e7;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  position: relative;
+  padding: 20px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    position: relative;
+    margin: 0;
+    border-right: 1px solid #818181;
+    padding-right: 20px;
+    font-size: 2.5vw;
+    font-weight: 700;
+    line-height: 1;
+    color: $gray;
+  }
+
+  a {
+    position: relative;
+    text-decoration: none;
+
+    h3 {
+      position: relative;
+      margin: 0;
+      padding: 0 25px;
+      font-size: 1.25vw;
+    }
+
+    &:last-child {
+
+      h3 {
+        padding-right: 0;
+      }
+
+    }
+
+  }
+
+}
+
+.global-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 50px 5%;
+  display: flex;
+  flex-direction: column;
+
+  .type {
+    position: relative;
+    width: fit-content;
+    padding: 10px 20px;
+    border-radius: 14px;
+    border: 1px solid $gray;
+    font-size: 20px;
+    color: $gray;
+    background: $lightGray;
+  }
+
+  .theme, .question {
+    position: relative;
+    margin-top: 75px;
+    font-size: 2vw;
+    color: $gray;
+    text-align: center;
+  }
+
+  .info {
+    position: relative;
+    margin-top: 10px;
+    font-size: 1.1vw;
+    text-align: center;
+  }
+
+  .themeWrapper, .questionWrapper {
+    position: relative;
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    h2 {
+      position: relative;
+      margin: 0 20px;
+      padding: 12px 18px;
+      font-size: 1.5vw;
+      color: $gray;
+      text-align: center;
+      border-radius: 14px;
+      cursor: pointer;
+      border: 1px solid $gray;
+      background: $lightGray;
+      transition: all ease-in-out 0.35s;
+
+      &:hover, &.selected {
+        background: #cecece;
+      }
+
+      &.disabled {
+        background: #ffffff;
+        color: #d5d5d5;
+        border: 1px solid #d5d5d5;
+      }
+
+    }
+
+  }
+
+  .answerWrapper {
+    position: relative;
+    margin: 20px auto 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    h5 {
+      position: relative;
+      font-weight: 300;
+      font-size: 15px;
+      color: $gray;
+    }
+
+    p {
+      position: relative;
+      margin: 0 5px;
+      font-weight: 500;
+      font-size: 15px;
+      color: $gray;
+    }
+
+  }
+
+}
