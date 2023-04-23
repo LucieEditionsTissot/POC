@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import io from 'socket.io-client';
+import Head from "next/head";
 
 const socket = io("http://localhost:3000");
 
@@ -25,27 +26,33 @@ const Client3 = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Animation</h1>
-            {selectedTheme && (
-                <div>
-                    <h2>Avec le thème choisi : {selectedTheme}</h2>
-                    <h3>{selectedAnimation}</h3>
-                    {correctAnswers.length > 0 ? (
-                        <div>
-                            <h3>Et les réponses correctes :</h3>
-                            <ul>
+        <>
+            <Head>
+                <title>Animation</title>
+            </Head>
+            <div className={"global-wrapper"}>
+                <h5 className={"type"}>Animation</h5>
+                {selectedTheme && (
+                    <div>
+                        <h2 className={"question"}>{selectedTheme}</h2>
+                        <h3 className={"selectedAnimation"}>{selectedAnimation}</h3>
+                        {correctAnswers.length > 0 ? (
+                            <div className={"answerWrapper"}>
+
+                                <h5>Réponses correctes : </h5>
+
                                 {correctAnswers.map((reponse, index) => (
-                                    <li key={index}>{reponse.animal}</li>
+                                    <p key={index}>{reponse.animal}</p>
                                 ))}
-                            </ul>
-                        </div>
-                    ) : (
-                        <p>Aucune réponse correcte n'a encore été reçue.</p>
-                    )}
-                </div>
-            )}
-        </div>
+
+                            </div>
+                        ) : (
+                            <p>Aucune réponse correcte n'a encore été reçue.</p>
+                        )}
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 
