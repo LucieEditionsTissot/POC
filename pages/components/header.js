@@ -11,6 +11,9 @@ function Header() {
             <a href={"/studentGroup2"}>
                 <h3>Groupe 2</h3>
             </a>
+            <a href={"/animation"}>
+                <h3>Animation</h3>
+            </a>
         </header>
     )
 }

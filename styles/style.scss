@@ -118,6 +118,35 @@ header {
 
   }
 
+  .buttonValidate {
+    position: relative;
+    margin: 20px auto 0;
+    width: fit-content;
+    padding: 8px 14px;
+    border-radius: 14px;
+    font-size: 30px;
+    cursor: pointer;
+    user-select: none;
+    background: #ffffff;
+    color: #d5d5d5;
+    border: 1px solid #d5d5d5;
+    transition: all ease-in-out 0.35s;
+
+    &.readyToClick {
+      background-color: $gray;
+      border: 1px solid $lightGray;
+      color: $lightGray;
+    }
+
+  }
+
+  .selectedAnimation {
+    position: relative;
+    margin-top: 30px;
+    font-size: 1.2vw;
+    font-weight: 400;
+  }
+
   .answerWrapper {
     position: relative;
     margin: 20px auto 0;

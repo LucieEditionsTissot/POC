@@ -56,23 +56,37 @@ export default function StudentTablet2() {
         }
     }, [clientId, reponseChoisie]);
 
-    const handleReponse = (reponseId, e) => {
-        if (document.querySelectorAll('.answer:not(.disabled)').length > 2) {
-            e.target.classList.add('disabled')
+    const handleClickOnAnswer = (e) => {
+        e.target.classList.toggle('disabled')
+        const numberOfAnswersLeft = document.querySelectorAll('.answer:not(.disabled)').length;
+        if (numberOfAnswersLeft === 1) {
+            document.querySelector('.buttonValidate').classList.add('readyToClick')
         } else {
-            e.target.classList.add('disabled')
-            const lastAnswerNotSelectedId = document.querySelector('.answer:not(.disabled)').id;
+            document.querySelector('.buttonValidate').classList.remove('readyToClick')
+        }
+
+    };
+
+    const handleClickOnValidateButton = () => {
+        const numberOfAnswers = document.querySelectorAll('.answer').length;
+        const numberOfDisabledAnswers = document.querySelectorAll('.answer.disabled').length;
+
+        if (numberOfDisabledAnswers === numberOfAnswers - 1) {
+            const lastAnswerNotSelected = document.querySelector('.answer:not(.disabled)');
+            const lastAnswerNotSelectedId = lastAnswerNotSelected.id
             const reponseSelectionnee = reponses.find(reponse => reponse.id === lastAnswerNotSelectedId);
+
             if (reponseSelectionnee) {
                 const isReponseCorrecte = reponseSelectionnee.isCorrect;
-                socket.emit("reponseQuestion", {reponseId, isCorrect: isReponseCorrecte});
+                socket.emit("reponseQuestion", {lastAnswerNotSelectedId, isCorrect: isReponseCorrecte});
                 setReponseSoumise(true);
                 setReponseChoisie(reponseSelectionnee.animal);
                 setReponseCorrecte(isReponseCorrecte);
                 setAttenteReponse(true);
             }
+
         }
-    };
+    }
 
     return (
         <>
@@ -93,11 +107,8 @@ export default function StudentTablet2() {
                 <div className={"questionWrapper"}>
                     {reponses.map((reponse, index) => (
                         <h2 className={"answer"} key={index} id={reponse.id}
-                            onClick={(e) => !reponseSoumise && handleReponse(reponse.id, e)}
+                            onClick={(e) => !reponseSoumise && handleClickOnAnswer(e)}
                             style={{
-                                padding: "1rem",
-                                margin: "1rem",
-                                border: "1px solid black",
                                 cursor: reponseSoumise ? "not-allowed" : "pointer"
                             }}
                         >
@@ -105,6 +116,11 @@ export default function StudentTablet2() {
                         </h2>
                     ))}
                 </div>
+                {questions.question && (
+                    <div className={"buttonValidate"} onClick={() => handleClickOnValidateButton()}>
+                        <p>Valider</p>
+                    </div>
+                )}
                 <div className={"answerWrapper"}>
 
                     {reponseChoisie && (
@@ -112,7 +128,7 @@ export default function StudentTablet2() {
                     )}
 
                     {attenteReponse && (
-                        <h5>, en attente du premier groupe</h5>
+                        <h5>, en attente du deuxième groupe</h5>
                     )}
 
                     {choixFaits && (

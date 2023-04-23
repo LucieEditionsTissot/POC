@@ -96,6 +96,31 @@ header a:last-child h3 {
   color: #d5d5d5;
   border: 1px solid #d5d5d5;
 }
+.global-wrapper .buttonValidate {
+  position: relative;
+  margin: 20px auto 0;
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-size: 30px;
+  cursor: pointer;
+  user-select: none;
+  background: #ffffff;
+  color: #d5d5d5;
+  border: 1px solid #d5d5d5;
+  transition: all ease-in-out 0.35s;
+}
+.global-wrapper .buttonValidate.readyToClick {
+  background-color: #303030;
+  border: 1px solid #e7e7e7;
+  color: #e7e7e7;
+}
+.global-wrapper .selectedAnimation {
+  position: relative;
+  margin-top: 30px;
+  font-size: 1.2vw;
+  font-weight: 400;
+}
 .global-wrapper .answerWrapper {
   position: relative;
   margin: 20px auto 0;
