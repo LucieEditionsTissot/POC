@@ -14,12 +14,20 @@ export default function StudentTablet2() {
     const [choixFaits, setChoixFaits] = useState(false);
     const [clientId, setClientId] = useState(null);
     const [selectedTheme, setSelectedTheme] = useState("");
+    const [indices, setIndices] = useState([]);
 
 
     useEffect(() => {
         socket.emit("registerStudent2");
         socket.on("questions", (questions) => {
             setQuestions(questions);
+        });
+
+        socket.on('indices', (indice) => {
+            if (Array.isArray(indice)) {
+                setIndices(indice);
+                console.log('Indice reçu:', indice);
+            }
         });
 
         socket.on("reponses", (reponses) => {

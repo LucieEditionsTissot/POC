@@ -14,11 +14,17 @@ export default function StudentTablet1() {
     const [choixFaits, setChoixFaits] = useState(false);
     const [clientId, setClientId] = useState(null);
     const [selectedTheme, setSelectedTheme] = useState("");
+    const [indices, setIndices] = useState([]);
 
     useEffect(() => {
         socket.emit("registerStudent1");
         socket.on("questions", (questions) => {
             setQuestions(questions);
+        });
+        socket.on('indices', (indice) => {
+            if (Array.isArray(indice)) {
+                setIndices(indice);
+            }
         });
 
         socket.on("reponses", (reponses) => {
@@ -120,6 +126,13 @@ export default function StudentTablet1() {
                     </div>
                 )}
                 <div className={"answerWrapper"}>
+                        <div>
+                            <h5>Indices :</h5>
+
+                            <ul>
+                                    <li>{indices}</li>
+                            </ul>
+                        </div>
 
                     {reponseChoisie && (
                         <p>{reponseCorrecte ? "Correct" : "Incorrect"}</p>

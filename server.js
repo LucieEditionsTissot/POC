@@ -13,6 +13,9 @@ let interval;
 let clientsChoixFaits = 0;
 let reponsesCorrectes;
 let themeChoisi;
+let indicesGroup1;
+let indicesGroup2;
+let indiceActuel = 0;
 const clients = io.sockets.adapter.rooms;
 const obtenirQuestionsPourTheme = (theme) => {
   const questions = {
@@ -20,11 +23,11 @@ const obtenirQuestionsPourTheme = (theme) => {
       { question: "Qui agit en symbiose dans l'océan ?", reponses: [
           {animal:"La tortue", isCorrect:false },
           {animal:"La loutre", isCorrect:false },
-          {animal:"Le poisson clown", isCorrect:true },
+          {animal:"Le poisson clown", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
           {animal:"Le crocodile", isCorrect:false },
           {animal:"La baleine", isCorrect:false },
           {animal:"Le crabe nageur", isCorrect:false },
-          {animal:"L'anémone", isCorrect:true },
+          {animal:"L'anémone", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
           {animal:"L'étoile de mer", isCorrect:false },
         ], animation : "Le mutualisme entre le poisson clown et l'anémone dans l'océan est une relation symbiotique où les deux espèces bénéficient mutuellement. Le poisson clown trouve refuge dans les tentacules venimeux de l'anémone, qui le protège des prédateurs. En retour, le poisson clown chasse les parasites de l'anémone et apporte de la nourriture grâce à ses déplacements, ce qui permet à l'anémone de se nourrir et de rester en bonne santé. C'est un exemple parfait de coopération et d'interdépendance dans la nature."},
     ],
@@ -32,11 +35,11 @@ const obtenirQuestionsPourTheme = (theme) => {
       { question: "Qui agit en symbiose dans la forêt ?",
         reponses: [
           {animal:"Le cerf", isCorrect:false },
-          {animal:"Le blaireau", isCorrect:true },
+          {animal:"Le blaireau", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
           {animal:"Le renard", isCorrect:false },
           {animal:"Le sanglier", isCorrect:false },
           {animal:"Le chevreuil", isCorrect:false },
-          {animal:"Le coyotte", isCorrect:true },
+          {animal:"Le coyotte", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
           {animal:"Le hérisson", isCorrect:false },
           {animal:"La belette", isCorrect:false },
         ], animation : "Le blaireau et le coyote forment une relation de mutualisme dans la forêt. Le blaireau creuse des terriers qui servent d'abris pour le coyote, tandis que le coyote chasse les petits rongeurs qui se cachent dans les terriers, fournissant ainsi de la nourriture au blaireau. Cette coopération bénéfique permet aux deux espèces de prospérer et de trouver des ressources essentielles pour leur survie dans leur habitat naturel.\n" },
@@ -45,11 +48,11 @@ const obtenirQuestionsPourTheme = (theme) => {
       { question: "Qui agit en symbiose dans la montagne ?",
         reponses: [
           {animal:"Le bouquetin", isCorrect:false },
-          {animal:"La marmotte", isCorrect:true },
+          {animal:"La marmotte", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis pas très grande"} , {indice :"Je suis moyenne"}]},
           {animal:"Le chamois", isCorrect:false },
           {animal:"Le renard", isCorrect:false },
           {animal:"Le Coq de Bruyères", isCorrect:false },
-          {animal:"L'aigle", isCorrect:true },
+          {animal:"L'aigle", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
           {animal:"Le mouflon", isCorrect:false },
           {animal:"La chauve-souris", isCorrect:false },
         ], animation : "En montagne, la marmotte et l'aigle royal entretiennent une relation de mutualisme. La marmotte, avec son excellente ouïe, sert de sentinelle pour alerter les autres animaux en cas de danger imminent, ce qui bénéficie également à l'aigle royal qui peut ainsi repérer plus facilement ses proies. En retour, l'aigle royal élimine les prédateurs potentiels de la marmotte, assurant ainsi sa sécurité et sa survie dans son habitat montagneux." },
@@ -58,11 +61,11 @@ const obtenirQuestionsPourTheme = (theme) => {
       { question: "Qui agit en symbiose dans la prairie ?",
         reponses: [
           {animal:"Le chien de prairie", isCorrect:false },
-          {animal:"La vache", isCorrect:true },
+          {animal:"La vache", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
           {animal:"L'antilope", isCorrect:false },
           {animal:"Le putois", isCorrect:false },
           {animal:"Le renard", isCorrect:false },
-          {animal:"Le héron", isCorrect:true },
+          {animal:"Le héron", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
           {animal:"La buse", isCorrect:false },
           {animal:"Le mormon", isCorrect:false },
         ], animation : "Le mutualisme entre la vache et le héron en prairie est une relation bénéfique pour les deux espèces. La vache, en broutant l'herbe, crée une zone dégagée propice à la recherche de proies pour le héron. En retour, le héron se nourrit des insectes et des parasites qui dérangent la vache, contribuant ainsi à la santé de l'animal. Cette coopération entre la vache et le héron favorise un équilibre écologique dans les prairies, où les deux espèces tirent profit des activités de l'autre." },
@@ -71,11 +74,11 @@ const obtenirQuestionsPourTheme = (theme) => {
       { question: "Qui agit en symbiose dans le jardin ?",
         reponses: [
           {animal:"Les abeilles", isCorrect:false },
-          {animal:"Les coccinelles", isCorrect:true },
+          {animal:"Les coccinelles", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
           {animal:"Les papillons", isCorrect:false },
           {animal:"Les vers de terre", isCorrect:false },
           {animal:"Les rouge-gorges", isCorrect:false },
-          {animal:"Les pucerons", isCorrect:true },
+          {animal:"Les pucerons", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
           {animal:"Les chenilles", isCorrect:false },
           {animal:"Le mormon", isCorrect:false },
         ],
@@ -92,6 +95,17 @@ const obtenirReponsesCorrectesPourTheme = (theme, bonnesReponses) => {
   return bonnesReponses.includes(reponse.animal) && reponse.isCorrect === true;
   });
 };
+
+const obtenirIndicesPourTheme = (theme, reponses) => {
+  const questions = obtenirQuestionsPourTheme(theme);
+  reponses = questions.reponses;
+  const indices = [];
+      for (const indice of reponses.indices) {
+        indices.push({ animal: reponses.animal, indice: indice.indice });
+    }
+  return indices;
+};
+
 const getApiAndEmit = (socket) => {
   const response = new Date();
   socket.emit("FromAPI", response);
@@ -119,16 +133,39 @@ io.on("connection", (socket) => {
     const reponses = obtenirQuestionsPourTheme(selectedTheme).reponses;
     const reponsesGroupe1 = reponses.slice(0, reponses.length/2);
     const reponsesGroupe2 = reponses.slice(reponses.length/2);
-    console.log(reponsesGroupe1)
-    console.log(reponsesGroupe2)
+    indicesGroup1 = reponsesGroupe1.map(reponse => reponse.indices);
+    indicesGroup2 = reponsesGroupe2.map(reponse => reponse.indices);
+    console.log(indicesGroup1+ "jdvsw");
+    console.log(indicesGroup2 + "qsgad");
+    const indice = reponsesGroupe1[indiceActuel];
+        io.to('client1').emit('indices', indice);
+        console.log("Indice envoyé à client1 :", indicesGroup1);
+        io.to('client2').emit('indices', indice);
+        console.log("Indice envoyé à client2 :", indicesGroup2);
+    indiceActuel++;
     const bonnesReponses = reponses.filter(reponse => reponse.isCorrect).map(reponse => reponse.animal);
     reponsesCorrectes = obtenirReponsesCorrectesPourTheme(selectedTheme, bonnesReponses);
     themeChoisi = selectedTheme;
     io.emit('reponsesCorrectes', reponsesCorrectes);
     io.emit('questions', questions);
-
     io.to("client1").emit('reponses', reponsesGroupe1);
     io.to("client2").emit('reponses', reponsesGroupe2);
+  });
+
+  socket.on('professeurClic', ({clientId}) => {
+
+    const indices = obtenirIndicesPourTheme(themeChoisi);
+    const indice = indices[indiceActuel].indice;
+
+      clientId = socket.id;
+      if (indiceActuel % 2 === 0) {
+        io.to('client1').emit('indices', indice);
+        console.log("Indice envoyé à client1 :", indice);
+      } else {
+        io.to('client2').emit('indices', indice);
+        console.log("Indice envoyé à client2 :", indice);
+    }
+    indiceActuel++;
   });
 
   socket.on("reponseQuestion", ({ reponseId, isCorrect}) => {
@@ -137,6 +174,7 @@ io.on("connection", (socket) => {
       socket.broadcast.emit("choixFaits", {clientId});
     }
   });
+
 
   socket.on("choixFaits", ({clientId}) => {
     clientId = socket.id;
