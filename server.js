@@ -100,9 +100,11 @@ const obtenirIndicesPourTheme = (theme, reponses) => {
   const questions = obtenirQuestionsPourTheme(theme);
   reponses = questions.reponses;
   const indices = [];
-      for (const indice of reponses.indices) {
-        indices.push({ animal: reponses.animal, indice: indice.indice });
+  for (const reponse of reponses) {
+    for (const indice of reponses.indices) {
+      indices.push({animal: reponses.animal, indice: indice.indice});
     }
+  }
   return indices;
 };
 
