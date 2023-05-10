@@ -22,9 +22,7 @@ export default function StudentTablet1() {
             setQuestions(questions);
         });
         socket.on('indices', (indice) => {
-            if (Array.isArray(indice)) {
                 setIndices(indice);
-            }
         });
 
         socket.on("reponses", (reponses) => {
@@ -126,24 +124,23 @@ export default function StudentTablet1() {
                     </div>
                 )}
                 <div className={"answerWrapper"}>
-                        <div>
-                            <h5>Indices :</h5>
-
-                            <ul>
-                                    <li>{indices}</li>
-                            </ul>
-                        </div>
+                    <div>
+                        <h5>Indices :</h5>
+                        <ul>
+                                <li>{indices}</li>
+                        </ul>
+                    </div>
 
                     {reponseChoisie && (
                         <p>{reponseCorrecte ? "Correct" : "Incorrect"}</p>
                     )}
 
                     {attenteReponse && (
-                        <h5>, en attente du deuxième groupe</h5>
+                        <h5>En attente du deuxième groupe</h5>
                     )}
 
                     {choixFaits && (
-                        <h5>, les choix ont été faits sur les deux tablettes.</h5>
+                        <h5> Les choix ont été faits sur les deux tablettes.</h5>
                     )}
 
                 </div>

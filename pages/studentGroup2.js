@@ -130,7 +130,12 @@ export default function StudentTablet2() {
                     </div>
                 )}
                 <div className={"answerWrapper"}>
-
+                        <div>
+                            <h5>Indices :</h5>
+                            <ul>
+                                <li>{indices}</li>
+                            </ul>
+                        </div>
                     {reponseChoisie && (
                         <p>{reponseCorrecte ? "Correct" : "Incorrect"}</p>
                     )}

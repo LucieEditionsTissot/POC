@@ -13,10 +13,10 @@ let interval;
 let clientsChoixFaits = 0;
 let reponsesCorrectes;
 let themeChoisi;
-let indicesGroup1;
-let indicesGroup2;
 let indiceActuel = 0;
 const clients = io.sockets.adapter.rooms;
+let reponsesGroupe1 = [];
+let reponsesGroupe2 = [];
 const obtenirQuestionsPourTheme = (theme) => {
   const questions = {
     ocean: [
@@ -35,11 +35,11 @@ const obtenirQuestionsPourTheme = (theme) => {
       { question: "Qui agit en symbiose dans la forêt ?",
         reponses: [
           {animal:"Le cerf", isCorrect:false },
-          {animal:"Le blaireau", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
+          {animal:"Le blaireau", isCorrect:true, indices: [{indice :"Je suis peut-être un blaireau"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}, {indice :"Je suis peut-être un blaireau"}]},
           {animal:"Le renard", isCorrect:false },
           {animal:"Le sanglier", isCorrect:false },
           {animal:"Le chevreuil", isCorrect:false },
-          {animal:"Le coyotte", isCorrect:true, indices: [{indice :"Je suis petite"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}]},
+          {animal:"Le coyotte", isCorrect:true, indices: [{indice :"Je suis peut-être un coyotte"} , {indice :"Je suis petite"} , {indice :"Je suis petite"}, {indice :"Je suis peut-être un blaireau"}]},
           {animal:"Le hérisson", isCorrect:false },
           {animal:"La belette", isCorrect:false },
         ], animation : "Le blaireau et le coyote forment une relation de mutualisme dans la forêt. Le blaireau creuse des terriers qui servent d'abris pour le coyote, tandis que le coyote chasse les petits rongeurs qui se cachent dans les terriers, fournissant ainsi de la nourriture au blaireau. Cette coopération bénéfique permet aux deux espèces de prospérer et de trouver des ressources essentielles pour leur survie dans leur habitat naturel.\n" },
@@ -96,15 +96,19 @@ const obtenirReponsesCorrectesPourTheme = (theme, bonnesReponses) => {
   });
 };
 
-const obtenirIndicesPourTheme = (theme, reponses) => {
+const obtenirIndicesPourTheme = (theme) => {
   const questions = obtenirQuestionsPourTheme(theme);
-  reponses = questions.reponses;
+  const reponses = obtenirReponsesCorrectesPourTheme(questions).reponses;
   const indices = [];
+
   for (const reponse of reponses) {
-    for (const indice of reponses.indices) {
-      indices.push({animal: reponses.animal, indice: indice.indice});
+    if(reponse.isCorrect) {
+      for (const indice of reponse.indices) {
+        indices.push({animal: reponse.animal, indice: indice.indice});
+      }
     }
   }
+
   return indices;
 };
 
@@ -133,18 +137,8 @@ io.on("connection", (socket) => {
   socket.on('themeChoisi', (selectedTheme) => {
     const questions = obtenirQuestionsPourTheme(selectedTheme);
     const reponses = obtenirQuestionsPourTheme(selectedTheme).reponses;
-    const reponsesGroupe1 = reponses.slice(0, reponses.length/2);
-    const reponsesGroupe2 = reponses.slice(reponses.length/2);
-    indicesGroup1 = reponsesGroupe1.map(reponse => reponse.indices);
-    indicesGroup2 = reponsesGroupe2.map(reponse => reponse.indices);
-    console.log(indicesGroup1+ "jdvsw");
-    console.log(indicesGroup2 + "qsgad");
-    const indice = reponsesGroupe1[indiceActuel];
-        io.to('client1').emit('indices', indice);
-        console.log("Indice envoyé à client1 :", indicesGroup1);
-        io.to('client2').emit('indices', indice);
-        console.log("Indice envoyé à client2 :", indicesGroup2);
-    indiceActuel++;
+    reponsesGroupe1 = reponses.slice(0, reponses.length/2);
+    reponsesGroupe2 = reponses.slice(reponses.length/2);
     const bonnesReponses = reponses.filter(reponse => reponse.isCorrect).map(reponse => reponse.animal);
     reponsesCorrectes = obtenirReponsesCorrectesPourTheme(selectedTheme, bonnesReponses);
     themeChoisi = selectedTheme;
@@ -154,18 +148,17 @@ io.on("connection", (socket) => {
     io.to("client2").emit('reponses', reponsesGroupe2);
   });
 
-  socket.on('professeurClic', ({clientId}) => {
+  socket.on('professeurClic', (client) => {
 
     const indices = obtenirIndicesPourTheme(themeChoisi);
     const indice = indices[indiceActuel].indice;
 
-      clientId = socket.id;
-      if (indiceActuel % 2 === 0) {
-        io.to('client1').emit('indices', indice);
-        console.log("Indice envoyé à client1 :", indice);
-      } else {
+    if (clients.get("client1")) {
+      io.to('client1').emit('indices', indice);
+      console.log("Indice envoyé à client1 :", indice);
+    } else {
         io.to('client2').emit('indices', indice);
-        console.log("Indice envoyé à client2 :", indice);
+      console.log("Indice envoyé à client2 :", indice);
     }
     indiceActuel++;
   });
@@ -176,7 +169,6 @@ io.on("connection", (socket) => {
       socket.broadcast.emit("choixFaits", {clientId});
     }
   });
-
 
   socket.on("choixFaits", ({clientId}) => {
     clientId = socket.id;
