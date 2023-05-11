@@ -13,6 +13,17 @@ let interval;
 let clientsChoixFaits = 0;
 let reponsesCorrectes;
 let themeChoisi;
+
+const indicesInterval = 15000;
+let currentIndex = 0;
+
+const themesIndices = {
+  ocean: ["*bruit de l'océan pour groupe 1*", "Indice 2", "Indice 3"],
+  foret: ["Indice 4", "Indice 5", "Indice 6"],
+  montagne: ["Indice 7", "Indice 8", "Indice 9"],
+  prairie: ["Indice 10", "Indice 11", "Indice 12"],
+  jardin: ["Indice 13", "Indice 14", "Indice 15"],
+};
 const clients = io.sockets.adapter.rooms;
 const obtenirQuestionsPourTheme = (theme) => {
   const questions = {
@@ -121,6 +132,16 @@ io.on("connection", (socket) => {
     const reponsesGroupe2 = reponses.slice(reponses.length/2);
     console.log(reponsesGroupe1)
     console.log(reponsesGroupe2)
+   setInterval(() => {
+      if (selectedTheme) {
+        const indices = themesIndices[selectedTheme];
+        const indice = indices.shift();
+        console.log(io.emit("indices", indice))
+        io.emit("indices", indice);
+        console.log(`Envoi des indices pour le thème ${selectedTheme}`);
+      }
+    }, indicesInterval);
+
     const bonnesReponses = reponses.filter(reponse => reponse.isCorrect).map(reponse => reponse.animal);
     reponsesCorrectes = obtenirReponsesCorrectesPourTheme(selectedTheme, bonnesReponses);
     themeChoisi = selectedTheme;
