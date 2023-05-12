@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import Head from 'next/head';
 import VideoPlayer from '../pages/components/VideoPlayer';
 
-const socket = io('http://localhost:3000');
+const socket = io('10.0.2.15:3000');
 
 const Client3 = () => {
     const [selectedTheme, setSelectedTheme] = useState('');

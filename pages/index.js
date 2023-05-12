@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 
-const socket = io("http://localhost:3000", {
+const socket = io("10.0.2.15:3000", {
     query: {group: "teacher"},
 });
 
