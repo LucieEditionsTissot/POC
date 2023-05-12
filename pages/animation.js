@@ -3,9 +3,10 @@ import io from 'socket.io-client';
 import Head from 'next/head';
 import VideoPlayer from '../pages/components/VideoPlayer';
 
-const socket = io('10.0.2.15:3000');
+const socket = io('localhost:3000');
 
 const Client3 = () => {
+    const themes = ['Mutualisme', 'Prédation', 'Commensalisme'];
     const [selectedTheme, setSelectedTheme] = useState('');
     const [selectedAnimation, setSelectedAnimation] = useState('');
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -15,12 +16,14 @@ const Client3 = () => {
     useEffect(() => {
         socket.emit('registerAnimationClient');
 
+        getThemeRandomly()
+
         socket.on('themeChosen', (theme, animation) => {
             setSelectedTheme(theme);
             setSelectedAnimation(animation);
         });
         socket.on('indices', (indices) => {
-            setIndices((prevIndices) => [...prevIndices, ...indices]);
+           // setIndices((prevIndices) => [...prevIndices, ...indices]);
             console.log("Indices reçus :", indices);
         });
         socket.on('reponsesCorrectes', (reponses) => {
@@ -30,6 +33,7 @@ const Client3 = () => {
             socket.disconnect();
         };
     }, []);
+
     useEffect(() => {
         if (prevIndices.length > 0) {
             const timerId = setInterval(() => {
@@ -41,6 +45,11 @@ const Client3 = () => {
             }, 15000);
         }
     }, [prevIndices]);
+
+    function getThemeRandomly() {
+        const selectedTheme = themes[Math.floor(Math.random() * themes.length)];
+        socket.emit('themeChoisi', selectedTheme);
+    }
 
     return (
         <>

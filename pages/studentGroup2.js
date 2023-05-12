@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import io from "socket.io-client";
 import Head from "next/head";
 
-const socket = io("10.0.2.15:3000");
+const socket = io("localhost:3000");
 
 export default function StudentTablet2() {
     const [questions, setQuestions] = useState([]);

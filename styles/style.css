@@ -96,6 +96,14 @@ header a:last-child h3 {
   color: #d5d5d5;
   border: 1px solid #d5d5d5;
 }
+.global-wrapper ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.global-wrapper li {
+  display: block;
+}
 .global-wrapper .buttonValidate {
   position: relative;
   margin: 20px auto 0;
