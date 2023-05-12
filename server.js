@@ -186,6 +186,6 @@ nextApp.prepare().then(() => {
 
   server.listen(port, err => {
     if (err) throw err;
-    console.log(`> Ready on http://10.0.2.15:${port}`);
+    console.log(`> Ready on http://localhost:${port}`);
   });
 });
