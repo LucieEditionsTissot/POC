@@ -6,7 +6,7 @@ import VideoPlayer from '../pages/components/VideoPlayer';
 const socket = io('localhost:3000');
 
 const Client3 = () => {
-    const themes = ['Mutualisme', 'Prédation', 'Commensalisme'];
+    const themes = ['Mutualisme', 'Predation', 'Commensalisme'];
     const [selectedTheme, setSelectedTheme] = useState('');
     const [selectedAnimation, setSelectedAnimation] = useState('');
     const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -18,8 +18,7 @@ const Client3 = () => {
 
         getThemeRandomly()
 
-        socket.on('themeChosen', (theme, animation) => {
-            setSelectedTheme(theme);
+        socket.on('choicesBothDone', (theme, animation) => {
             setSelectedAnimation(animation);
         });
         socket.on('indices', (indices) => {
@@ -49,6 +48,8 @@ const Client3 = () => {
     function getThemeRandomly() {
         const selectedTheme = themes[Math.floor(Math.random() * themes.length)];
         socket.emit('themeChoisi', selectedTheme);
+        setSelectedTheme(selectedTheme);
+        console.log("Theme choisi :", selectedTheme);
     }
 
     return (
@@ -71,10 +72,9 @@ const Client3 = () => {
 
                     </div>
                 )}
-                {selectedTheme && <VideoPlayer />}
                 {selectedTheme && (
                     <div>
-                        <h2 className={'question'}>{selectedTheme}</h2>
+                        <h2 className={'question'}>Thème tiré au hasard : {selectedTheme}</h2>
                         <h3 className={'selectedAnimation'}>{selectedAnimation}</h3>
 
                         {correctAnswers.length > 0 ? (
@@ -90,6 +90,7 @@ const Client3 = () => {
                         )}
                     </div>
                 )}
+                {selectedTheme && <VideoPlayer />}
             </div>
         </>
     );

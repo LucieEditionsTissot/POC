@@ -25,9 +25,10 @@ const themesIndices = {
     jardin: ["Indice 13", "Indice 14", "Indice 15"],
 };
 const clients = io.sockets.adapter.rooms;
+
 const obtenirQuestionsPourTheme = (theme) => {
     const questions = {
-        ocean: [
+        Mutualisme: [
             {
                 question: "Qui agit en symbiose dans l'océan ?",
                 reponses: [
@@ -43,39 +44,7 @@ const obtenirQuestionsPourTheme = (theme) => {
                 animation: "Le mutualisme entre le poisson clown et l'anémone dans l'océan est une relation symbiotique où les deux espèces bénéficient mutuellement. Le poisson clown trouve refuge dans les tentacules venimeux de l'anémone, qui le protège des prédateurs. En retour, le poisson clown chasse les parasites de l'anémone et apporte de la nourriture grâce à ses déplacements, ce qui permet à l'anémone de se nourrir et de rester en bonne santé. C'est un exemple parfait de coopération et d'interdépendance dans la nature."
             },
         ],
-        foret: [
-            {
-                question: "Qui agit en symbiose dans la forêt ?",
-                reponses: [
-                    {animal: "Le cerf", isCorrect: false},
-                    {animal: "Le blaireau", isCorrect: true},
-                    {animal: "Le renard", isCorrect: false},
-                    {animal: "Le sanglier", isCorrect: false},
-                    {animal: "Le chevreuil", isCorrect: false},
-                    {animal: "Le coyotte", isCorrect: true},
-                    {animal: "Le hérisson", isCorrect: false},
-                    {animal: "La belette", isCorrect: false},
-                ],
-                animation: "Le blaireau et le coyote forment une relation de mutualisme dans la forêt. Le blaireau creuse des terriers qui servent d'abris pour le coyote, tandis que le coyote chasse les petits rongeurs qui se cachent dans les terriers, fournissant ainsi de la nourriture au blaireau. Cette coopération bénéfique permet aux deux espèces de prospérer et de trouver des ressources essentielles pour leur survie dans leur habitat naturel.\n"
-            },
-        ],
-        montagne: [
-            {
-                question: "Qui agit en symbiose dans la montagne ?",
-                reponses: [
-                    {animal: "Le bouquetin", isCorrect: false},
-                    {animal: "La marmotte", isCorrect: true},
-                    {animal: "Le chamois", isCorrect: false},
-                    {animal: "Le renard", isCorrect: false},
-                    {animal: "Le Coq de Bruyères", isCorrect: false},
-                    {animal: "L'aigle", isCorrect: true},
-                    {animal: "Le mouflon", isCorrect: false},
-                    {animal: "La chauve-souris", isCorrect: false},
-                ],
-                animation: "En montagne, la marmotte et l'aigle royal entretiennent une relation de mutualisme. La marmotte, avec son excellente ouïe, sert de sentinelle pour alerter les autres animaux en cas de danger imminent, ce qui bénéficie également à l'aigle royal qui peut ainsi repérer plus facilement ses proies. En retour, l'aigle royal élimine les prédateurs potentiels de la marmotte, assurant ainsi sa sécurité et sa survie dans son habitat montagneux."
-            },
-        ],
-        prairie: [
+        Predation: [
             {
                 question: "Qui agit en symbiose dans la prairie ?",
                 reponses: [
@@ -91,7 +60,7 @@ const obtenirQuestionsPourTheme = (theme) => {
                 animation: "Le mutualisme entre la vache et le héron en prairie est une relation bénéfique pour les deux espèces. La vache, en broutant l'herbe, crée une zone dégagée propice à la recherche de proies pour le héron. En retour, le héron se nourrit des insectes et des parasites qui dérangent la vache, contribuant ainsi à la santé de l'animal. Cette coopération entre la vache et le héron favorise un équilibre écologique dans les prairies, où les deux espèces tirent profit des activités de l'autre."
             },
         ],
-        jardin: [
+        Commensalisme: [
             {
                 question: "Qui agit en symbiose dans le jardin ?",
                 reponses: [
@@ -179,7 +148,7 @@ io.on("connection", (socket) => {
         clientsChoixFaits++;
         if (clientsChoixFaits === 2) {
             const animation = obtenirQuestionsPourTheme(themeChoisi).animation;
-            io.emit("themeChosen", themeChoisi, animation);
+            io.emit("choicesBothDone", themeChoisi, animation);
             clientsChoixFaits = 0;
             io.emit("choixFaits", {});
             setTimeout(() => {
